@@ -1,4 +1,11 @@
+const fs = require('fs');
 let items = document.getElementById('items')
+
+let readerJS
+
+fs.readFile(`${__dirname}/reader.js`, (err, data) => {
+    readerJS = data.toString()
+})
 
 exports.storage = JSON.parse(localStorage.getItem('readit-items')) || [];
 
@@ -50,6 +57,18 @@ exports.open = () => {
     let selectedItem = document.getElementsByClassName('read-item selected')[0];
     let contentUrl = selectedItem.dataset.url
     console.log(contentUrl);
+
+    let readerWin = window.open(contentUrl, '', `
+        maxWidth=2000,
+        maxHeight=2000,
+        width=1200,
+        height=800,
+        nodeIntegration=0,
+        backgroundColor="#dedede,
+        contextIsolation=1
+    `)
+
+    readerWin.eval(readerJS)
 }
 
 this.storage.forEach(e => {
